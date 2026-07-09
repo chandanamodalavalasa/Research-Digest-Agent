@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <div class="postmark">
+    <div class="postmark-text">{{ today }}<br>RESEARCH<br>DESK</div>
+  </div>
+
+  <div class="field-label">Subject of inquiry</div>
+  <form method="POST" id="dispatch-form">
+    <input
+      type="text"
+      name="topic"
+      placeholder="e.g. renewable energy technology"
+      value="{{ topic }}"
+      autocomplete="off"
+      required
+    >
+    <div>
+      <button type="submit" id="submit-btn">Send Request &#9656;</button>
+    </div>
+    <div class="quota">{{ remaining }} of {{ daily_limit }} free dispatches remaining today</div>
+  </form>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  {% if summary %}
+    <div class="dispatch">
+      <div class="dispatch-label">&#9998; Report received — {{ topic }}</div>
+      <div class="dispatch-text">{{ summary }}</div>
+    </div>
+  {% endif %}
+</div>
+
+{% if recent %}
+  <div class="card" style="margin-top: 20px;">
+    <div class="field-label">Recently on file</div>
+    {% for d in recent %}
+      <div class="archive-item">
+        <div class="dispatch-label" style="margin-bottom: 4px;">{{ d.topic }}</div>
+        <div class="dispatch-text" style="font-size: 13px;">{{ d.summary[:180] }}{% if d.summary|length > 180 %}…{% endif %}</div>
+        <div class="dispatch-date">{{ d.created_at.strftime('%d %b, %H:%M') }} UTC</div>
+      </div>
+    {% endfor %}
+    <div style="margin-top: 14px;">
+      <a class="btn" href="{{ url_for('history') }}" style="padding: 9px 18px; font-size: 13px;">See full archive &rarr;</a>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+  document.getElementById('dispatch-form').addEventListener('submit', function () {
+    var btn = document.getElementById('submit-btn');
+    btn.textContent = 'Wiring the desk…';
+    btn.disabled = true;
+  });
+</script>
+
+{% endblock %}

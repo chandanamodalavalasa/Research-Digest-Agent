@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block subhead %}Every dispatch you've ever requested, in one place.{% endblock %}
+{% block content %}
+
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="field-label" style="margin-bottom: 0;">Full archive</div>
+    {% if dispatches %}
+      <form method="POST" action="{{ url_for('clear_history') }}"
+            onsubmit="return confirm('Delete your entire archive? This cannot be undone.');">
+        <button type="submit" style="background: transparent; color: var(--stamp-red); padding: 6px 0; font-size: 12px;">
+          Clear all
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if dispatches %}
+    {% for d in dispatches %}
+      <div class="archive-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+          <div class="dispatch-label" style="margin-bottom: 4px;">{{ d.topic }}</div>
+          <form method="POST" action="{{ url_for('delete_dispatch', dispatch_id=d.id) }}"
+                onsubmit="return confirm('Delete this dispatch?');">
+            <button type="submit" style="background: transparent; color: var(--text-fade); padding: 2px 0; font-size: 12px; white-space: nowrap;">
+              Delete &times;
+            </button>
+          </form>
+        </div>
+        <div class="dispatch-text" style="font-size: 14px;">{{ d.summary }}</div>
+        <div class="dispatch-date">{{ d.created_at.strftime('%d %b %Y, %H:%M') }} UTC</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="color: var(--text-fade); font-size: 14px;">No dispatches on file yet. Go request your first one.</p>
+  {% endif %}
+
+  <div style="margin-top: 18px;">
+    <a class="btn" href="{{ url_for('home') }}" style="padding: 9px 18px; font-size: 13px;">&larr; Back to the desk</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block subhead %}Log in to access the wire desk.{% endblock %}
+{% block content %}
+
+<div class="card">
+  <div class="field-label">Account access</div>
+
+  <form method="POST">
+    <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+    <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
+    <button type="submit">Log In &#9656;</button>
+  </form>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <div class="switch-line">No account yet? <a href="{{ url_for('signup') }}">Open one here</a></div>
+</div>
+
+{% endblock %}
